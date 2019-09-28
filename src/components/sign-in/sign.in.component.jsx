@@ -3,6 +3,7 @@ import './sign.in.component.styles.scss';
 
 import FormInput from '../form-input/form.input.component';
 import AppBasketButton from '../apparel-basket-button/apparel.basket.button.component'
+import { signInWithGoogle } from '../../firebase/firebase.utils';
 
 class SignIn extends React.Component{
     constructor(props) {
@@ -14,7 +15,6 @@ class SignIn extends React.Component{
         }
     }
 onSubmitHandler = event => {
-    console.log('On submit event', event);
     event.preventDefault();
     this.setState({email: '', password: ''})
 }
@@ -43,9 +43,13 @@ onChangeHandler = event => {
                             changeHandler={this.onChangeHandler}>
                     </FormInput>
 
-                    <AppBasketButton type="submit">
+                    <div className='buttons'>
+                        <AppBasketButton type="submit">
                         Sign In
-                    </AppBasketButton>
+                        </AppBasketButton>
+                        <AppBasketButton onClick={signInWithGoogle} isGoogleSignIn>
+                        Sign in with Google</AppBasketButton>
+                    </div>
                 </form>
             </div>
         );

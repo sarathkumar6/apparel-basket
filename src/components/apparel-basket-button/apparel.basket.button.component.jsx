@@ -1,8 +1,9 @@
 import React from 'react';
 import './apparel.basket.component.styles.scss';
 
-const AppBasketButton = ({children, ...otherProps}) => (
-    <button className='app-basket-button'>
+const AppBasketButton = ({children, isGoogleSignIn, ...otherProps}) => (
+    <button className={`${isGoogleSignIn? 'google-sign-in' : ''} app-basket-button`}
+        {...otherProps}>
         {children}
     </button>
 );
