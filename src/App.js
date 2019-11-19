@@ -6,8 +6,8 @@ import './App.css';
 import HomePage from './pages/homepage/homepage.component'
 import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component'
-import SignInSignUpPage from './pages/sign-in-sing-up/sign.in.sign.up.component'
-import { auth } from './firebase/firebase.utils';
+import SignInSignUpPage from './pages/sign-in-sign-up/sign.in.sign.up.component'
+import { auth, createUserProfileDoc } from './firebase/firebase.utils';
 
 const HatsPage = (props) => (
   <div>
@@ -30,10 +30,23 @@ class App extends React.Component {
   componentDidMount() {
     // Useful to get the user session persistence - who's currently logged in
     // Subscription - observer
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(user =>{
-      console.log(user);
-      this.setState({currentUser: user});
-    })
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth =>{
+      if (userAuth) {
+        const userRef = await createUserProfileDoc(userAuth);
+
+        userRef.onSnapshot(snapShot => {
+          this.setState({
+            currentUser: {
+              id: snapShot.id,
+              ...snapShot.data()
+            }
+          }, () => console.log(this.state));
+        })
+      }
+      this.setState({
+        currentUser: userAuth
+      }, ()=>console.log(this.state));
+    });
   }
 
   componentWillUnmount() {
