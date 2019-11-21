@@ -3,7 +3,8 @@ import './sign.in.component.styles.scss';
 
 import FormInput from '../form-input/form.input.component';
 import AppBasketButton from '../apparel-basket-button/apparel.basket.button.component'
-import { signInWithGoogle } from '../../firebase/firebase.utils';
+import { auth, signInWithGoogle } from '../../firebase/firebase.utils';
+import { catchClause } from '@babel/types';
 
 class SignIn extends React.Component{
     constructor(props) {
@@ -14,9 +15,16 @@ class SignIn extends React.Component{
             password: ''
         }
     }
-onSubmitHandler = event => {
+onSubmitHandler = async (event) => {
     event.preventDefault();
-    this.setState({email: '', password: ''})
+    const { email, password } = this.state;
+    try  {
+        await auth.signInWithEmailAndPassword(email, password);
+        this.setState({email: '', password: ''})
+    }
+    catch (error) {
+        console.log('Error Signing in', error.message);
+    }
 }
 
 onChangeHandler = event => {
