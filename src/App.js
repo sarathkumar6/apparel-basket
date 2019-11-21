@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 // eslint-disable-next-line no-unused-vars
 import logo from './logo.svg';
 import './App.css';
@@ -10,7 +10,7 @@ import SignInSignUpPage from './pages/sign-in-sign-up/sign.in.sign.up.component'
 import { auth, createUserProfileDoc } from './firebase/firebase.utils';
 
 import {connect} from 'react-redux';
-import {setCurrentUser} from './redux/user/user.actions'
+import {setCurrentUser} from './redux/user/user.actions';
 
 // connect is a higher order component - 
 
@@ -59,13 +59,21 @@ class App extends React.Component {
           <Switch>
             <Route exact path='/' component={HomePage} />
             <Route path='/shop' component={ShopPage} />
-            <Route path='/signin' component={SignInSignUpPage} />
+            <Route path='/signin' render={()=>{
+              return this.props.currentUser ? (<Redirect to='/'/>) :
+                                       (<SignInSignUpPage/>)
+            }} />
           </Switch>
       </div>
     );
   }
 }
 
+const mapStateToProps = ({user}) => {
+  return {
+    currentUser: user.currentUser
+  }
+}
 const mapDisPatchToProps = (dispatch) => {
   console.log('What the fuck is dispatch here? ', dispatch)
   return {
@@ -74,4 +82,4 @@ const mapDisPatchToProps = (dispatch) => {
       dispatch(setCurrentUser(user))
     }
 }}
-export default connect(null, mapDisPatchToProps)(App);
+export default connect(mapStateToProps, mapDisPatchToProps)(App);
