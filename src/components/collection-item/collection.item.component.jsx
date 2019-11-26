@@ -6,7 +6,6 @@ import {addItem} from '../../redux/cart/cart.actions';
 
 const CollectionItem = ({item, addItem}) => {
     // ToDo: Destructure item properties image url, name, price
-    console.log('What is item here', item)
     return (
         <div className='collection-item'>
         <div className='image'
